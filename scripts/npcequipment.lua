@@ -1,32 +1,32 @@
 --------------------------------------------------------------------------------
 npcequipment = {
   isDirty = false,
-  delay = 0
+  delay = 0.25,
+  timer = 0
 }
 
 if delegate ~= nil then delegate.create("npcequipment") end
 --------------------------------------------------------------------------------
 function npcequipment.init()  
-    if storage.npceq ~= nil then
-        npcequipment.unequip()
-    else
-        npcequipment.store()
+    if storage.npceq == nil then
+      storage.npceq = entity.configParameter("npceq", nil)
     end
+    npcequipment.isDirty = true
 end
 --------------------------------------------------------------------------------
 function npcequipment.main(args)
-    npcequipment.delay = npcequipment.delay + entity.dt()
+    npcequipment.timer = npcequipment.timer + entity.dt()
     
-    if npcequipment.delay > 0.25 then
-        npcequipment.delay = 0
+    if npcequipment.timer > npcequipment.delay then
+        npcequipment.timer = 0
         local p = entity.position()
         if world.isVisibleToPlayer({p[1]-2, p[2]-2, p[1]+2, p[2]+2}) then
             if npcequipment.isDirty then
-              delegate.delayCallback("npcequipment", "update", nil, 0)
+              npcequipment.update()
             end
         else
             if not npcequipment.isDirty then
-              delegate.delayCallback("npcequipment", "unequip", nil, 0)
+              npcequipment.unequip()
             end
         end
     end
@@ -50,22 +50,24 @@ function npcequipment.store()
 end
 --------------------------------------------------------------------------------
 function npcequipment.unequip()
+  if storage.npceq ~= nil then
     entity.setItemSlot("head", nil)
     entity.setItemSlot("chest", nil)
     entity.setItemSlot("legs", nil)
     entity.setItemSlot("back", nil)
-    npcequipment.isDirty = true
+  end
+  npcequipment.isDirty = true
 end
 --------------------------------------------------------------------------------
 function npcequipment.update()
-    local eq = storage.npceq
-    if eq == nil then return end
-    
+  local eq = storage.npceq
+  if eq ~= nil then    
     entity.setItemSlot("head", eq.head)
     entity.setItemSlot("chest", eq.chest)
     entity.setItemSlot("legs", eq.legs)
     entity.setItemSlot("back", eq.back)
-    npcequipment.isDirty = false
+  end
+  npcequipment.isDirty = false
 end
 --------------------------------------------------------------------------------
 function npcequipment.swapContainer(storageId)
@@ -77,21 +79,3 @@ function npcequipment.swapContainer(storageId)
     storage.npceq = eq
     npcequipment.update()
 end
-
---[[function equipment.generate()
---TODO fix equipment to match any species
---TODO add safty checks
-    local npcItem = "items." .. entity.species() .. "[0][1][0]"
-    if storage.equipment.head == nil then
-        storage.equipment.head = entity.randomizeParameter(npcItem .. ".head")
-    end
-    if storage.equipment.chest == nil then
-        storage.equipment.chest = entity.randomizeParameter(npcItem .. ".chest")
-    end
-    if storage.equipment.legs == nil then
-        storage.equipment.legs = entity.randomizeParameter(npcItem .. ".legs")
-    end
-    if storage.equipment.back == nil then
-        storage.equipment.back = entity.randomizeParameter(npcItem .. ".back")
-    end
-end]]--
