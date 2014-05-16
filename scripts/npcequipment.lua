@@ -74,10 +74,10 @@ end
 --------------------------------------------------------------------------------
 function npcequipment.swapContainer(storageId)
     local eq = storage.npceq
-    eq.head = world.callScriptedEntity(storageId, "swapItemAt", eq.head, 0)
-    eq.chest = world.callScriptedEntity(storageId, "swapItemAt", eq.chest, 1)
-    eq.legs = world.callScriptedEntity(storageId, "swapItemAt", eq.legs, 2)
-    eq.back = world.callScriptedEntity(storageId, "swapItemAt", eq.back, 3)
+    eq.head = world.callScriptedEntity(storageId, "swapItemAt", eq.head, "headarmor")
+    eq.chest = world.callScriptedEntity(storageId, "swapItemAt", eq.chest, "chestarmor")
+    eq.legs = world.callScriptedEntity(storageId, "swapItemAt", eq.legs, "legsarmor")
+    eq.back = world.callScriptedEntity(storageId, "swapItemAt", eq.back, "backarmor")
     storage.npceq = eq
     npcequipment.update()
 end

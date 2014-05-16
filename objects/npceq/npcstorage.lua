@@ -2,20 +2,30 @@ function init(virtual)
     if storage.history == nil then storage.history = {} end
 end
 
-function swapItemAt(item, index)
-    if type(index) ~= "number" then return nil end
+function swapItemAt(item, slot)
     local cId = entity.id()
-    local stored = world.containerItemAt(cId, index)
+    local stored = nil
+    local size = world.containerSize(cId)
+    local index = nil
+    
+    for i = 0,size,1 do
+        local it = world.containerItemAt(cId, i)
+        if it and world.itemType(it.name) == slot then
+          stored = item
+          index = i
+          break
+        end
+    end
     
     if stored == nil or stored.name == nil then return item end
-    if not isSlotType(stored.name, index) then return item end
+    --if not isSlotType(stored.name, index) then return item end
     if isCompanionAdded(stored, index) then return item end
     storage.history[index+1] = item
     stored = world.containerTakeAt(cId, index)
     if item ~= nil and item.name ~= nil then
         local result = world.containerPutItemsAt(cId, item, index)
         if result then
-            --TODO Oh noes, drop it quick
+            world.spawnItem(result.name, entity.position(), result.count, result.data)
         end
     end
     return stored
@@ -52,10 +62,8 @@ function hasCapability(capability)
         local item = world.containerItemAt(cId, i)
         local isCAdded = isCompanionAdded(item, i)
         if isCAdded ~= true then storage.history[i+1] = nil end
-        --TODO Check that item is correct slot type
         if isCAdded == false then newItem = true end
     end
-    --world.logInfo("Has Capability " .. tostring(newItem))
     return true
   else
     return false
