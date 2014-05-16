@@ -34,8 +34,10 @@
   ],
   
   "scripts" : [ 
-    "/objects/npceq/npcstorage.lua"
+    "/objects/npceq/npcstorage.lua", "/scripts/helper.lua"
   ],
+  
+  "containerCallback" : "onInventoryUpdate",
 
   "openSounds" : [ "/sfx/objects/woodenbox_open.wav" ],
   "closeSounds" : [ "/sfx/objects/woodenbox_close.wav" ],

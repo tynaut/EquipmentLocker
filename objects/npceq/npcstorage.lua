@@ -1,5 +1,6 @@
 function init(virtual)
     if storage.history == nil then storage.history = {} end
+    if storage.isDirty == nil then storage.isDirty = false end
 end
 
 function swapItemAt(item, slot)
@@ -9,63 +10,47 @@ function swapItemAt(item, slot)
     local index = nil
     
     for i = 0,size,1 do
-        local it = world.containerItemAt(cId, i)
-        if it and world.itemType(it.name) == slot then
-          stored = item
-          index = i
-          break
+      local it = world.containerItemAt(cId, i)
+      if it and world.itemType(it.name) == slot and isNew(it, i) then
+        stored = world.containerTakeAt(cId, i)
+        storage.history[i+1] = item
+        if item ~= nil and item.name ~= nil then
+          local result = world.containerPutItemsAt(cId, item, i)
+          if result then
+              world.spawnItem(result.name, entity.position(), result.count, result.data)
+          end
         end
+        item = stored
+        break
+      end
     end
-    
-    if stored == nil or stored.name == nil then return item end
-    --if not isSlotType(stored.name, index) then return item end
-    if isCompanionAdded(stored, index) then return item end
-    storage.history[index+1] = item
-    stored = world.containerTakeAt(cId, index)
-    if item ~= nil and item.name ~= nil then
-        local result = world.containerPutItemsAt(cId, item, index)
-        if result then
-            world.spawnItem(result.name, entity.position(), result.count, result.data)
-        end
-    end
-    return stored
+    return item
 end
 
-function isSlotType(name, index)
-    if index == 0 then
-        return world.itemType(name) == "headarmor"
-    elseif index == 1 then
-        return world.itemType(name) == "chestarmor"
-    elseif index == 2 then
-        return world.itemType(name) == "legsarmor"
-    elseif index == 3 then
-        return world.itemType(name) == "backarmor"
-    end
-    return false
-end
-
-function isCompanionAdded(item, index)
+function isNew(item, index)
     if storage.history == nil then return nil end
-    if storage.history[index+1] == nil then return nil end
     if item == nil then return nil end
+    if storage.history[index+1] == nil then return true end
     --TODO deep compare?
-    return storage.history[index+1].name == item.name
+    return storage.history[index+1].name ~= item.name
+end
+
+function onInventoryUpdate()
+  local cId = entity.id()
+  local size = world.containerSize(cId)
+  
+  storage.isDirty = false
+  for i = 0,size,1 do
+    local item = world.containerItemAt(cId, i)
+    if item == nil then storage.history[i+1] = nil end
+    if isNew(item, i) then
+      storage.isDirty = true
+    end
+  end
 end
 
 function hasCapability(capability)
   if capability == 'equipment' then
-    local cId = entity.id()
-    local size = world.containerSize(cId)
-    local newItem = false
-    for i = 0,size,1 do
-        --TODO make this shit work
-        local item = world.containerItemAt(cId, i)
-        local isCAdded = isCompanionAdded(item, i)
-        if isCAdded ~= true then storage.history[i+1] = nil end
-        if isCAdded == false then newItem = true end
-    end
-    return true
-  else
-    return false
+    return storage.isDirty
   end
 end

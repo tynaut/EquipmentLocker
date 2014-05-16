@@ -1,6 +1,7 @@
 --------------------------------------------------------------------------------
 npcequipment = {
-  isDirty = true
+  isDirty = false,
+  delay = 0
 }
 
 if delegate ~= nil then delegate.create("npcequipment") end
@@ -10,26 +11,21 @@ function npcequipment.init()
         npcequipment.unequip()
     else
         npcequipment.store()
-        npcequipment.isDiry = false
     end
-    npcequipment.delay = world.time()
 end
 --------------------------------------------------------------------------------
 function npcequipment.main(args)
-    if world.time() - npcequipment.delay > 0.5 then
-    --    equipment.update()
-    --    equipment.main = nil
-        npcequipment.delay = world.time()
-        --TODO
-        --1) rewrite json items to prevent defaulting clothes
-        --2) or use this route?
+    npcequipment.delay = npcequipment.delay + entity.dt()
+    
+    if npcequipment.delay > 0.25 then
+        npcequipment.delay = 0
         local p = entity.position()
-        if world.isVisibleToPlayer({p[1]-10, p[2]-10, p[1]+10, p[2]+10}) then
-            if not npcequipment.isEquiped then
+        if world.isVisibleToPlayer({p[1]-2, p[2]-2, p[1]+2, p[2]+2}) then
+            if npcequipment.isDirty then
               delegate.delayCallback("npcequipment", "update", nil, 0)
             end
         else
-            if npcequipment.isEquiped then
+            if not npcequipment.isDirty then
               delegate.delayCallback("npcequipment", "unequip", nil, 0)
             end
         end
