@@ -1,0 +1,11 @@
+{
+  "name" : "EquipmentLocker",
+  "version" : "Beta v. Enraged Koala",
+  "path" : ".",
+  "dependencies" : [],
+  "metadata" : {
+    "author" : "tynaut",
+    "description" : "Gear up your NPCs",
+    "version" : "0.1"
+  }
+}
