@@ -1,5 +1,5 @@
 {
-  "objectName" : "companionbox1",
+  "objectName" : "npceqlocker1",
   "rarity" : "Common",
   "objectType" : "container",
 
@@ -16,33 +16,28 @@
   "humanDescription" : "A crate.",
   "hylotlDescription" : "A wooden crate.",
 
-  "inventoryIcon" : "box1icon.png",
+  "inventoryIcon" : "locker1icon.png",
   "orientations" : [
     {
-      "leftImage" : "box1left.png:default",
-      "rightImage" : "box1right.png:default",
-
+      "dualImage" : "locker1.png:<color>",
       "imagePosition" : [-8, 0],
-      "frames" : 1,
-      "animationCycle" : 0.5,
 
       "spaceScan" : 0.1,
       "anchors" : [ "bottom" ],
       "collision" : "platform"
-
     }
   ],
   
   "scripts" : [ 
-    "/objects/npceq/npcstorage.lua", "/scripts/helper.lua"
+    "/objects/npceq/npcstorage.lua"
   ],
   
   "containerCallback" : "onInventoryUpdate",
 
   "openSounds" : [ "/sfx/objects/woodenbox_open.wav" ],
   "closeSounds" : [ "/sfx/objects/woodenbox_close.wav" ],
-  "slotCount" : 9,
-  "uiConfig" : "/interface/chests/npceq.config",
+  "slotCount" : 16,
+  "uiConfig" : "/interface/chests/chest%slots%.config",
   "frameCooldown" : 67,
   "autoCloseCooldown" : 3600
 }
