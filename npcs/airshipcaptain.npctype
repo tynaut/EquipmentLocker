@@ -1,0 +1,8 @@
+{
+  "__merge" : [],
+  "scripts" : [
+    "/scripts/delegate.lua",
+    "/npcs/equipState.lua",
+    "/scripts/npcequipment.lua"
+  ]
+}
