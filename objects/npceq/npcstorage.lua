@@ -1,9 +1,10 @@
 function init(virtual)
-    if storage.history == nil then storage.history = {} end
     if storage.isDirty == nil then storage.isDirty = false end
 end
 
 function swapItemAt(item, slot)
+    if storage.history == nil then storage.history = {} end
+    
     local cId = entity.id()
     local stored = nil
     local size = world.containerSize(cId)
@@ -27,12 +28,25 @@ function swapItemAt(item, slot)
     return item
 end
 
---TODO locker claiming
---[[function claimLocker(id)
-  local seed = nil
-  if id then seed = world.callScriptedEntity(id, "entity.seed") end
-  storage.npcseed = seed
-end]]--
+function checkOwnership(seed)
+  if entity.configParameter("isPersonalStorage") then
+    return seed == storage.npcseed,storage.npcseed == nil
+  end
+  return nil
+end
+
+function claimLocker(seed)
+  if entity.configParameter("isPersonalStorage") then
+    if seed == nil then
+      entity.setAnimationState("switchState", "off")
+    else
+      entity.setAnimationState("switchState", "on")
+    end
+    storage.npcseed = seed
+    return entity.position()
+  end
+  return nil
+end
 
 function slotCompare(item, slot)
   if item == nil or slot == nil then return nil end
@@ -48,6 +62,7 @@ function isNew(item, index)
 end
 
 function onInventoryUpdate()
+  if storage.history == nil then storage.history = {} end
   local cId = entity.id()
   local size = world.containerSize(cId)
   
@@ -62,9 +77,9 @@ function onInventoryUpdate()
 end
 
 function hasEquipment(id)
-  --[[if entity.configParameter("isPersonalStorage") then
+  if entity.configParameter("isPersonalStorage") then
     if storage.seed and storage.seed ~= world.callScriptedEntity(id, "entity.seed") then return false end
-  end]]--
+  end
   if entity.configParameter("isSpawnerExclusive") then
     if world.callScriptedEntity(id, "entity.configParameter", "spawnedBy") ~= nil then
       return storage.isDirty

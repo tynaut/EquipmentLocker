@@ -5,21 +5,21 @@
 
   "category" : "storage",
   "price" : 500,
-  "description" : "A wooden crate.",
-  "shortdescription" : "Wooden Crate",
+  "description" : "A personal locker for someone to store their stuff.",
+  "shortdescription" : "Personal Locker",
   "race" : "generic",
 
-  "apexDescription" : "A wooden box.",
-  "avianDescription" : "A box made out of wood.",
-  "floranDescription" : "A box of stripped tree-flesssh.",
-  "glitchDescription" : "Identify. Box. Wooden.",
-  "humanDescription" : "A crate.",
-  "hylotlDescription" : "A wooden crate.",
+  "apexDescription" : "A personal locker.",
+  "avianDescription" : "A personal locker.",
+  "floranDescription" : "A personal locker.",
+  "glitchDescription" : "Identify. A personal locker.",
+  "humanDescription" : "A personal locker.",
+  "hylotlDescription" : "A personal locker.",
 
   "inventoryIcon" : "locker1icon.png",
   "orientations" : [
     {
-      "dualImage" : "locker1.png:<color>",
+      "dualImage" : "locker1.png:<color>.off",
       "imagePosition" : [-8, 0],
 
       "spaceScan" : 0.1,
@@ -31,6 +31,12 @@
   "scripts" : [ 
     "/objects/npceq/npcstorage.lua"
   ],
+  
+  "animation" : "/objects/wired/switch/switchtoggle.animation",
+  "animationPosition" : [-8, 0],
+  "animationParts" : {
+    "switch" : "locker1.png"
+  },
   
   "containerCallback" : "onInventoryUpdate",
   "isSpawnerExclusive" : true,

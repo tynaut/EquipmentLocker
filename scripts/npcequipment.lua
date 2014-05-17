@@ -2,7 +2,9 @@
 npcequipment = {
   isDirty = false,
   delay = 0.25,
-  timer = 0
+  timer = 0,
+  lockerTimer = 0,
+  lockerDelay = 60
 }
 
 if delegate ~= nil then delegate.create("npcequipment") end
@@ -16,9 +18,9 @@ end
 --------------------------------------------------------------------------------
 function npcequipment.main(args)
   if storage.npceq then
-    npcequipment.timer = npcequipment.timer + entity.dt()
-    if npcequipment.timer > npcequipment.delay then
-      npcequipment.timer = 0
+    npcequipment.timer = npcequipment.timer - entity.dt()
+    if npcequipment.timer < 0 then
+      npcequipment.timer = npcequipment.delay
       local p = entity.position()
       if world.isVisibleToPlayer({p[1]-2, p[2]-2, p[1]+2, p[2]+2}) then
         if npcequipment.isDirty then
@@ -30,11 +32,19 @@ function npcequipment.main(args)
         end
       end
     end
+    
+    npcequipment.lockerTimer = npcequipment.lockerTimer - entity.dt()
+    if npcequipment.lockerTimer < 0 then
+      npcequipment.lockerTimer = npcequipment.lockerDelay
+      npcequipment.checkLocker()
+    end
   end
 end
 --------------------------------------------------------------------------------
 function npcequipment.die()
 --TODO if companion, drop stuff
+  local locker = npcequipment.checkLocker()
+  if locker then world.callScriptedEntity(locker, "claimLocker", nil) end
 end
 --------------------------------------------------------------------------------
 function npcequipment.store()
@@ -93,4 +103,17 @@ function npcequipment.swapContainer(storageId)
   end
   storage.npceq = eq
   npcequipment.update()
+end
+--------------------------------------------------------------------------------
+function npcequipment.checkLocker()
+  local eq = storage.npceq
+  if eq == nil or eq.locker == nil then return false end
+  
+  local objectIds = world.objectQuery(eq.locker, 5, {callScript = "checkOwnership", callScriptArgs = {entity.seed()}})  
+  if objectIds[1] == nil then
+    eq.locker = nil
+    return nil
+  end
+  
+  return objectIds[1]
 end

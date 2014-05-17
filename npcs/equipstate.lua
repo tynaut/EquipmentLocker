@@ -25,6 +25,9 @@ function equipState.update(dt, stateData)
   local distance = world.magnitude(toTarget)
   if distance < 3 then
     npcequipment.swapContainer(stateData.targetId)
+    if storage.npceq then
+      storage.npceq.locker = world.callScriptedEntity(stateData.targetId, "claimLocker", entity.seed())
+    end
     return true,1
   else
     moveTo(stateData.targetPosition, dt)
@@ -37,8 +40,10 @@ function equipState.findTarget(position)
     --TODO What shape query?
   local objectIds = world.objectQuery(position, 20, { callScript = "hasEquipment", callScriptArgs = {entity.id()} })
   for _,id in ipairs(objectIds) do
-    --TODO check for key pair
-    return {targetId = id, targetPosition = world.entityPosition(id)}
+    local ownership,available = world.callScriptedEntity(id, "checkOwnership", entity.seed())
+    if ownership ~= false or (available and (storage.npceq == nil or storage.npceq.locker == nil)) then 
+      return {targetId = id, targetPosition = world.entityPosition(id)}
+    end
   end
   return nil
 end
