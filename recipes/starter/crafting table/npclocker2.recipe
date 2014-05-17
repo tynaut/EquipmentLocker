@@ -1,0 +1,10 @@
+{
+  "input" : [
+    { "item" : "darkwoodmaterial", "count" : 3 }
+  ],
+  "output" : {
+    "item" : "npceqlocker2",
+    "count" : 1
+  },
+  "groups" : [ "mod", "craftingtable", "objects", "all", "tools" ]
+}

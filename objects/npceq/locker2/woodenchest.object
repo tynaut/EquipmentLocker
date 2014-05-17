@@ -1,0 +1,44 @@
+{
+  "objectName" : "npceqlocker2",
+  "rarity" : "Common",
+  "objectType" : "container",
+
+  "category" : "storage",
+  "price" : 500,
+  "description" : "Donation bin for hand-me-down clothes.",
+  "shortdescription" : "Small Dresser",
+  "race" : "generic",
+
+  "apexDescription" : "A small dresser.",
+  "avianDescription" : "A small dresser.",
+  "floranDescription" : "A small dresser.",
+  "glitchDescription" : "Identify. A small dresser.",
+  "humanDescription" : "A small dresser.",
+  "hylotlDescription" : "A small dresser.",
+
+  "inventoryIcon" : "woodenchesticon.png",
+  "orientations" : [
+    {
+      "dualImage" : "woodenchest.png:<color>",
+      "imagePosition" : [-8, 0],
+
+      "spaceScan" : 0.1,
+      "anchors" : [ "bottom" ],
+      "collision" : "platform"
+    }
+  ],
+  
+  "scripts" : [ 
+    "/objects/npceq/npcstorage.lua"
+  ],
+  
+  "containerCallback" : "onInventoryUpdate",
+  "isSpawnerExclusive" : true,
+
+  "openSounds" : [ "/sfx/objects/woodenbox_open.wav" ],
+  "closeSounds" : [ "/sfx/objects/woodenbox_close.wav" ],
+  "slotCount" : 16,
+  "uiConfig" : "/interface/chests/chest%slots%.config",
+  "frameCooldown" : 67,
+  "autoCloseCooldown" : 3600
+}
