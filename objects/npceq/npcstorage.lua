@@ -11,7 +11,7 @@ function swapItemAt(item, slot)
     
     for i = 0,size,1 do
       local it = world.containerItemAt(cId, i)
-      if it and world.itemType(it.name) == slot and isNew(it, i) then
+      if slotCompare(it, slot) and isNew(it, i) then
         stored = world.containerTakeAt(cId, i)
         storage.history[i+1] = item
         if item ~= nil and item.name ~= nil then
@@ -25,6 +25,18 @@ function swapItemAt(item, slot)
       end
     end
     return item
+end
+
+--TODO locker claiming
+--[[function claimLocker(id)
+  local seed = nil
+  if id then seed = world.callScriptedEntity(id, "entity.seed") end
+  storage.npcseed = seed
+end]]--
+
+function slotCompare(item, slot)
+  if item == nil or slot == nil then return nil end
+  return world.itemType(item.name) == slot
 end
 
 function isNew(item, index)
@@ -49,8 +61,15 @@ function onInventoryUpdate()
   end
 end
 
-function hasCapability(capability)
-  if capability == 'equipment' then
+function hasEquipment(id)
+  --[[if entity.configParameter("isPersonalStorage") then
+    if storage.seed and storage.seed ~= world.callScriptedEntity(id, "entity.seed") then return false end
+  end]]--
+  if entity.configParameter("isSpawnerExclusive") then
+    if world.callScriptedEntity(id, "entity.configParameter", "spawnedBy") ~= nil then
+      return storage.isDirty
+    end
+  else
     return storage.isDirty
   end
 end

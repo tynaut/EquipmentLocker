@@ -1,6 +1,7 @@
 equipState = {}
 
 function equipState.enter()
+  if npcequipment == nil then return nil,10 end
   local position = entity.position()
   local target = equipState.findTarget(position)
   if target ~= nil then
@@ -10,23 +11,23 @@ function equipState.enter()
       timer = 10
     }
   end
-  return nil
+  return nil,1
 end
 
 function equipState.update(dt, stateData)
   stateData.timer = stateData.timer - dt
   if stateData.timer < 0 then
-    return true, entity.configParameter("work.cooldown", nil)
+    return true,1
   end
 
   local position = entity.position()
   local toTarget = world.distance(stateData.targetPosition, position)
   local distance = world.magnitude(toTarget)
-  if distance < entity.configParameter("work.toolRange") then
+  if distance < 3 then
     npcequipment.swapContainer(stateData.targetId)
-    return true
+    return true,1
   else
-    move(toTarget, dt)
+    moveTo(stateData.targetPosition, dt)
   end
 
   return false
@@ -34,10 +35,11 @@ end
 
 function equipState.findTarget(position)
     --TODO What shape query?
-    local objectIds = world.objectQuery(position, 20, { callScript = "hasCapability", callScriptArgs = {"equipment"} })
-    if objectIds[1] ~= nil then
-        return {targetId = objectIds[1], targetPosition = world.entityPosition(objectIds[1])}
-    end
-    return nil
+  local objectIds = world.objectQuery(position, 20, { callScript = "hasEquipment", callScriptArgs = {entity.id()} })
+  for _,id in ipairs(objectIds) do
+    --TODO check for key pair
+    return {targetId = id, targetPosition = world.entityPosition(id)}
+  end
+  return nil
 end
 --------------------------------------------------------------------------------

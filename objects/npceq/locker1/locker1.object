@@ -33,10 +33,12 @@
   ],
   
   "containerCallback" : "onInventoryUpdate",
+  "isSpawnerExclusive" : true,
+  "isPersonalStorage" : true,
 
   "openSounds" : [ "/sfx/objects/woodenbox_open.wav" ],
   "closeSounds" : [ "/sfx/objects/woodenbox_close.wav" ],
-  "slotCount" : 16,
+  "slotCount" : 9,
   "uiConfig" : "/interface/chests/chest%slots%.config",
   "frameCooldown" : 67,
   "autoCloseCooldown" : 3600
