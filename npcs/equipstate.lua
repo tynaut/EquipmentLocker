@@ -24,9 +24,11 @@ function equipState.update(dt, stateData)
   local toTarget = world.distance(stateData.targetPosition, position)
   local distance = world.magnitude(toTarget)
   if distance < 3 then
-    npcequipment.swapContainer(stateData.targetId)
-    if storage.npceq then
-      storage.npceq.locker = world.callScriptedEntity(stateData.targetId, "claimLocker", entity.seed())
+    if world.callScriptedEntity(stateData.targetId, "checkOwnership", entity.seed()) ~= false then
+      npcequipment.swapContainer(stateData.targetId)
+      if storage.npceq then
+        storage.npceq.locker = world.callScriptedEntity(stateData.targetId, "claimLocker", entity.seed())
+      end
     end
     return true,1
   else
