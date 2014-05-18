@@ -29,8 +29,8 @@ function swapItemAt(item, slot)
 end
 
 function checkOwnership(seed)
-  if entity.configParameter("isPersonalStorage") then
-    return seed == storage.npcseed,storage.npcseed == nil
+  if storage.npcseed and entity.configParameter("isPersonalStorage") then
+    return seed == storage.npcseed
   end
   return nil
 end
@@ -77,6 +77,9 @@ function onInventoryUpdate()
 end
 
 function hasEquipment(id)
+  --TODO remove when fixed 
+  onInventoryUpdate()
+  
   if entity.configParameter("isPersonalStorage") then
     if storage.seed and storage.seed ~= world.callScriptedEntity(id, "entity.seed") then return false end
   end

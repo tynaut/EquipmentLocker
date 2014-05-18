@@ -38,10 +38,11 @@ end
 
 function equipState.findTarget(position)
     --TODO What shape query?
-  local objectIds = world.objectQuery(position, 20, { callScript = "hasEquipment", callScriptArgs = {entity.id()} })
+  local objectIds = world.objectQuery(position, 30, { callScript = "hasEquipment", callScriptArgs = {entity.id()} })
   for _,id in ipairs(objectIds) do
-    local ownership,available = world.callScriptedEntity(id, "checkOwnership", entity.seed())
-    if ownership ~= false or (available and (storage.npceq == nil or storage.npceq.locker == nil)) then 
+    local ownership = world.callScriptedEntity(id, "checkOwnership", entity.seed())
+    local personal = world.callScriptedEntity(id, "entity.configParameter", "isPersonalStorage")
+    if ownership or not personal or (ownership == nil and (storage.npceq == nil or storage.npceq.locker == nil)) then 
       return {targetId = id, targetPosition = world.entityPosition(id)}
     end
   end

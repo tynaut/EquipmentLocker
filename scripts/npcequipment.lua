@@ -4,7 +4,7 @@ npcequipment = {
   delay = 0.25,
   timer = 0,
   lockerTimer = 0,
-  lockerDelay = 60
+  lockerDelay = 300
 }
 
 if delegate ~= nil then delegate.create("npcequipment") end
@@ -108,10 +108,10 @@ end
 function npcequipment.checkLocker()
   local eq = storage.npceq
   if eq == nil or eq.locker == nil then return false end
-  
+  world.loadRegion({eq.locker[1] - 3, eq.locker[2] - 3, eq.locker[1] + 3, eq.locker[2] + 3})
   local objectIds = world.objectQuery(eq.locker, 5, {callScript = "checkOwnership", callScriptArgs = {entity.seed()}})  
   if objectIds[1] == nil then
-    eq.locker = nil
+    storage.npceq.locker = nil
     return nil
   end
   

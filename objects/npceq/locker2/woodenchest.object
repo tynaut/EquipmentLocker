@@ -31,8 +31,9 @@
   "scripts" : [ 
     "/objects/npceq/npcstorage.lua"
   ],
+  "scriptDelta" : 300,
   
-  "containerCallback" : "onInventoryUpdate",
+  //"containerCallback" : "onInventoryUpdate",
   "isSpawnerExclusive" : true,
 
   "openSounds" : [ "/sfx/objects/woodenbox_open.wav" ],
