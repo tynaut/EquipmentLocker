@@ -14,7 +14,7 @@ function swapItemAt(item, slot)
       local it = world.containerItemAt(cId, i)
       if slotCompare(it, slot) and isNew(it, i) then
         stored = world.containerTakeAt(cId, i)
-        storage.history[i+1] = item
+        storage.history[tostring(i+1)] = item
         if item ~= nil and item.name ~= nil then
           local result = world.containerPutItemsAt(cId, item, i)
           if result then
@@ -56,9 +56,9 @@ end
 function isNew(item, index)
     if storage.history == nil then return nil end
     if item == nil then return nil end
-    if storage.history[index+1] == nil then return true end
+    if storage.history[tostring(index+1)] == nil then return true end
     --TODO deep compare?
-    return storage.history[index+1].name ~= item.name
+    return storage.history[tostring(index+1)].name ~= item.name
 end
 
 function onInventoryUpdate()
@@ -69,7 +69,7 @@ function onInventoryUpdate()
   storage.isDirty = false
   for i = 0,size,1 do
     local item = world.containerItemAt(cId, i)
-    if item == nil then storage.history[i+1] = nil end
+    if item == nil then storage.history[tostring(i+1)] = nil end
     if isNew(item, i) then
       storage.isDirty = true
     end
